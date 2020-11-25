@@ -1,0 +1,282 @@
+%! TEX = pdflatex
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{color}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{titling}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{listings}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1.2}%Adjust Line Spacing
+\newtheorem{Q}{Question}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}% Adjust Margins of the File
+\usepackage{tikz-qtree}
+\usetikzlibrary{graphs}
+\tikzset{every tree node/.style={minimum width=2em,draw,circle},
+	blank/.style={draw=none},
+	edge from parent/.style=
+	{draw,edge from parent path={(\tikzparentnode) -- (\tikzchildnode)}},
+	level distance=1.2cm}
+\setlength{\droptitle}{-6em}
+%%% Code style
+\lstset{
+	%backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+	rulesepcolor= \color{gray}, %代码块边框颜色
+	breaklines=true,  %代码过长则换行
+	numbers=left, %行号在左侧显示
+	numberstyle= \small,%行号字体
+	keywordstyle= \color{magenta},%关键字颜色
+	commentstyle=\color{blue}, %注释颜色
+	frame=shadowbox, %用方框框住代码块
+	tabsize=3, %缩进大小
+	showspaces = false
+}
+% Create horizontal rule command with an argument of height
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}}
+% Set the title here
+\title{
+    \normalfont \normalsize
+    \textsc{ShanghaiTech University} \\ [25pt]
+    \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+    \huge CS101 Algorithms and Data Structures\\ % The assignment title
+    \LARGE Fall 2019\\
+    \LARGE Homework 13\\
+    \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+% wrong usage of \author, never mind
+\author{}
+\date{Due date: 23:59, December 26th, 2019}
+
+% set the header and footer
+\pagestyle{fancy}
+\lhead{CS101 Algorithms and Data Structures}
+\chead{Homework 13}
+\rhead{Due date: 23:59, December 26th, 2019}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% special settings for the first page
+\fancypagestyle{firstpage}
+{
+	\renewcommand{\headrulewidth}{0pt}
+	\fancyhf{}
+	\fancyfoot[C]{\thepage}
+}
+
+% Add the support for auto numbering
+% use \problem{title} or \problem[number]{title} to add a new problem
+% also \subproblem is supported, just use it like \subsection
+\newcounter{ProblemCounter}
+\newcounter{oldvalue}
+\newcommand{\problem}[2][-1]{
+	\setcounter{oldvalue}{\value{secnumdepth}}
+	\setcounter{secnumdepth}{0}
+	\ifnum#1>0
+		\setcounter{ProblemCounter}{#1}
+	\else
+		\stepcounter{ProblemCounter}
+	\fi
+	\section{Problem \arabic{ProblemCounter}: #2}
+	\setcounter{secnumdepth}{\value{oldvalue}}
+}
+\newcommand{\subproblem}[1]{
+	\setcounter{oldvalue}{\value{section}}
+	\setcounter{section}{\value{ProblemCounter}}
+	\subsection{#1}
+	\setcounter{section}{\value{oldvalue}}
+}
+
+\begin{document}
+\maketitle
+\thispagestyle{firstpage}
+%\newpage
+\vspace{3ex}
+
+\begin{enumerate}
+\item Please write your solutions in English. 
+
+\item Submit your solutions to gradescope.com.  
+
+\item Set your FULL Name to your Chinese name and your STUDENT ID correctly in Account Settings. 
+
+\item If you want to submit a handwritten version, scan it clearly. Camscanner is recommended. 
+
+\item When submitting, match your solutions to the according problem numbers correctly. 
+
+\item No late submission will be accepted.
+
+\item Violations to any of above may result in zero score. 
+
+\item {\large\color{red}{In this homework, all the proofs need three steps. The demand is on the next page. If you do not answer in a standard format, you will not get any point.}}
+
+\end{enumerate}
+\newpage
+\section*{Demand of the NP-complete Proof}
+When proving problem A is NP-complete, please clearly divide your answer into three steps:
+\begin{enumerate}
+
+\item Prove that problem A is in NP.
+
+\item Choose an NP-complete problem B and for any B instance, construct an instance of problem A.
+
+\item Prove that the yes/no answers to the two instances are the same.
+
+\end{enumerate}
+\newpage
+\section*{0. Proof Example}
+Suppose you are going to schedule courses for the SIST and try to make the number of conflicts on more than K. You are given 3 sets of inputs: $C=\{\cdots\},S=\{\cdots\},R=\{\{\cdots\},\{\cdots\},\cdots\}$. C is the set of distinct courses. S is the set of available time slots for all the courses. R is the set of requests from students, consisting of a number of subsets, each of which species the course a student wants to take. A conflict occurs when two courses are scheduled at the same slot even though a student requests both of them. Prove this schedule problem is NP-complete.\\
+\textcolor{blue}{
+	\begin{enumerate}
+		\item Firstly, for any given schedule as a certificate, we can traverse every student's requests and check whether the courses in his/her requests conflicts and count the number of conflicts, and at last check if the total number is fewer than K, which can be done in polynomial time. Thus the given problem is in NP.
+		\item We choose 3-coloring problem which is a NP-complete problem. For any instance of 3-coloring problem with graph $G$, we can construct an instance of the given problem: let every node $v$ becomes a course, thus construct $C$; let every edge $(u,v)$ becomes a student whose requests is $\{u,v\}$, thus construct $R$; let each color we use becomes a slot, thus construct $S$; at last let $K$ equals to $0$.
+		\item We now prove $G$ is a yes-instance of 3-coloring problem if and only if $(C,S,R,K)$ is a yes-instance of
+		the given problem:
+		\begin{itemize}
+			\item "$\Rightarrow$": if $G$ is a yes-instance of 3-coloring problem, then schedule the courses according to their color. Since for each edge $(u,v)$, $u$ and $v$ will be painted with different color, then for each student, his/her requests will not be scheduled to the same slot, which means the given problem is also a yes-instance.
+			\item "$\Leftarrow$": if $(C,S,R,K)$ is a yes-instance of the given problem, then painting the nodes in $G$ according to their slots. Since $K=0$, then for every student, there is no conflict between their requests, which suggests that for every edge $(u,v)$, $u$ and $v$ will not be painted with the same color. It is also a yes-instance of 3-coloring problem.
+		\end{itemize}
+	\end{enumerate}
+	Therefore, the given problem is NP-complete.
+}
+\newpage
+\section*{1. (2*1') True or False}
+\begin{enumerate}[(a)]
+	\item Suppose a NP problem is proved to be solved by an algorithm in polynomial time, then it indicates that NP=P.\\
+	\vspace{1em}
+	\begin{tabular}{|c|}
+		\hline
+		(a)\\
+		\hline
+		{\color{blue}F} \\
+		\hline
+	\end{tabular}
+	\item For any NP problem, the NPC problem can be reduced to that problem since it is the definition of NPC.\\
+	\vspace{1em}
+	\begin{tabular}{|c|}
+		\hline
+		(b)\\
+		\hline
+		{\color{blue}T}  \\
+		\hline
+	\end{tabular}
+\end{enumerate}
+\vspace{0.5in}
+
+\section*{2. (2*4') NP}
+
+Show the following problems are in NP. 
+\begin{enumerate}[(a)]
+	\item Given a graph with n nodes and a number k, are there k nodes that form a clique?(vertices in a clique are all connected to each other)\\
+	\textbf{Part(A)}: Construct the certifier(1')
+	{\color{blue}
+	\par Denote the certifier as $C(G,S,k)$, where $G$ denotes the original graph, $S$ denotes a certificate (constructed by nodes) and $k$ is the given number. The certifier checks three conditions:
+	\begin{enumerate}
+		\item[1.] Whether $S$ has exactly $k$ nodes
+		\item[2.] Whether $S$ is a subset of $G$
+		\item[3.] Whether all nodes in $S$ are connected to each other in $G$
+	\end{enumerate}
+	\par The certifier returns TRUE if all these conditions are satisfied and returns FALSE otherwise.
+	}
+	\par\textbf{Part(B)}: If the instance x has a solution, show that your certifier works(1')
+	{\color{blue}
+	\par If there is a solution, then it means there is a clique of $k$ nodes. Let this clique be the certificate $S$ and by definition of clique, all three conditions mentioned above are satisfied for $S$, so the certifier returns TRUE.
+	}
+	\par\textbf{Part(C)}: If the instance x has no solution, show that your certifier works(1')
+	{\color{blue}
+	\par Since there's no solution, then there's no clique of $k$ nodes in instance x. For any certificate $S$ there is at least one condition mentioned above that cannot be satisfied, so the certifier always returns FALSE.
+	}
+	\par\textbf{Part(D)}: Show that certifier works in poly-time(1')
+	{\color{blue}
+	\par Given a certificate, the certifier needs to check every pair of nodes and every edge between them. Denote the number of nodes as $|N|$ and the number of edges as $|E|$, then the certifier needs $O({|N|}^2\cdot|E|)$. Since $|N|$ and $|S|$ are both polynomial, thus the certifier works in poly-time.
+	}
+	\vspace{0.3in}
+	\item Given a set of n cities, and distances between each pair of cities, is there a path visit each city exactly once, and has distance at most D, for a given D? \\
+	\textbf{Part(A)}: Construct the certifier(1')
+	{\color{blue}
+	\par Denote the certifier as $C(G,S,D)$, where $G$ denotes the graph already obtained from the original data (denote each city as a node and connect each pair of nodes with a weighted edge whose value is the distance between corresponding cities), $S$ denotes a certificate (a path) and $D$ is the given distance. The certifier checks three conditions:
+	\begin{enumerate}
+		\item[1.] Whether $S$ has a distance of at most $D$
+		\item[2.] Whether $S$ is a path in $G$
+		\item[3.] Whether $S$ is a path that visits each node in $G$ exactly once
+	\end{enumerate}
+	\par The certifier returns TRUE if all these conditions are satisfied and returns FALSE otherwise.
+	}
+	\par\textbf{Part(B)}: If the instance x has a solution, show that your certifier works(1')
+	{\color{blue}
+	\par If there is a solution, then it means there is a path of at most $D$ distance that visits each city exactly once. Let the digital representation of this path be the certificate $S$ and all three conditions mentioned above are satisfied for $S$, so the certifier returns TRUE.
+	}
+	\par\textbf{Part(C)}: If the instance x has no solution, show that your certifier works(1')
+	{\color{blue}
+	\par Since there's no solution, then there's no path of at most $D$ distance that visits each city exactly once. For any certificate $S$ there is at least one condition mentioned above that cannot be satisfied, so the certifier always returns FALSE.
+	}
+	\par\textbf{Part(D)}: Show that certifier works in poly-time(1')
+	{\color{blue}
+	\par The certifier checks every node and edge in $S$, since the number of nodes and edges is polynomial, the certifier works in poli-time.
+	}
+\end{enumerate}
+
+\newpage
+\section*{3. ($\bigstar$ 10') Knapsack Problem}
+
+Consider the Knapsack problem. We have $n$ items, each with weight $a_j$ and value $c_j (j = 1,..., n)$. All
+$a_j$ and $c_j$ are positive integers. The question is to find a subset of the items with total weight at most $b$ such
+that the corresponding profit is at least $k$ ($b$ and $k$ are also integers). Show that Knapsack is NP-complete
+by a reduction from Subset Sum. (Subset Sum Problem: Given $n$ natural numbers $w_1,\cdots, w_n$ and an integer $W$, is there a subset that adds up to exactly $W$?)
+{\color{blue}
+\par\textbf{Solution: }
+\begin{enumerate}
+	\item Firstly, for any given certificate, the certifier needs to adds up all weights $a_j$ and compare the sum with the weight limit $b$; the certifier also needs to adds up all values $c_j$ and compare the sum with the profit limit $k$. These two operations both take $O(n)$, which is poli-time. Thus the given problem is in NP.
+	\item Choose the Subset Sum problem which is a NP-complete problem itself. For any instance of Subset Sum problem, construct an instance of the given problem: for each integer $w_j$ in $w_1, \ldots, w_n$, let $a_j = c_j = w_j$ and let both weight limit and profit limit $b = k = W$.
+	\item Now prove an instance (denote as $T$) of Subset Sum problem is an yes-instance iff the corresponding instance (denote as $S$) of Knapsack problem is an yes-instance.
+	\begin{itemize}
+		\item "$\Rightarrow$": If $T$ is an yes-instance,  there is a subset of $\{w_1, \ldots, w_n\}$ that adds up to $W$, denote that subset as $\{w_{j_1}, \ldots, w_{j_t}\}$ where $1 \leq j_1 \leq \cdots \leq j_t \leq n$. Then $\sum\limits_{m = 1}^t{a_{j_m}} = W$ and $\sum\limits_{m = 1}^t{c_{j_m}} = W$ because of the way we construct $S$ instance, so $S$ is an yes-instance.
+		\item "$\Leftarrow$": If $S$ is an yes-instance, there is a series of integers $1 \leq j_1 \leq \cdots \leq j_t \leq n$ such that $\sum\limits_{m = 1}^t{a_{j_m}} \leq b = W$ and $\sum\limits_{m = 1}^t{c_{j_m}} \geq k = W$. Since $a_{j_m} = c_{j_m} = w_{j_m}$, therefore, $\sum\limits_{m = 1}^t{w_{j_m}} = W$ and $T$ is an yes-instance.
+	\end{itemize}
+\end{enumerate}
+\par Therefore, the given problem is NP-complete.
+}
+
+\pagebreak
+\section*{4. ($\bigstar\bigstar$ 10') Zero-Weight-Cycle Problem}
+You are given a directed graph G = (V,E) with weights $w_e$ on its edges $e \in E$. The weights can be negative or positive. The Zero-Weight-Cycle Problem is to decide if there is a simple cycle in G so that the sum of the edge weights on this cycle is exactly 0. Prove that this problem is NP-complete by a reduction from the Directed-Hamiltonian-Cycle problem.
+{\color{blue}
+\par\textbf{Solution: }
+\begin{enumerate}
+	\item Firstly, for any given certificate, we can traverse all cycles in the given certificate and check whether there exists a cycle that the sum of the edge weights is exactly 0. There are polynomial number of cycles so the certifier needs poli-time. Thus the given problem is in NP.	\item We choose the Directed Hamiltonian Cycle problem which is a NP-complete problem. For any instance of Directed Hamiltonian Cycle problem, we construct an instance of the given problem: add an edge from $v_i$ to $v_j$ ($i,j \in [1,n]$) with the weight $1 - n$ and set all the other edges' weights to 1. We do so for $n^2$ times to find all possible combinations.
+	\item We now prove an instance (denote as $T$) of Directed  Hamiltonian Cycle problem is an yes-instance iff the corresponding instance (denote as $S$) of Zero Weight Cycle problem is an yes-instance.
+	\begin{itemize}
+		\item "$\Rightarrow$": If $T$ is an yes-instance, then there is a directed hamiltonian cycle (suppose the cycle path is $v_{m_1}, \ldots, v_{m_n}, v_{m_1}$) in $T$ and we can find exactly one edge in the corresponding cycle in $S$ that have the weight of $1 - n$ and all the other edges with weights of 1. Since there there will be one combination that an edge of weight $1 - n$ from $v_{m_1}$ to $v_{m_n}$ is added, thus $S$ is an yes-instance.
+		\item "$\Leftarrow$": If $S$ is an yes-instance, then there is a zero weight cycle (suppose the cycle path is $v_{m_1}, \ldots, v_{m_n}, v_{m_1}$) in $S$. Then in $S$, there is a directed hamiltonian cycle that has the same cycle path and by changing combinations of added edge, there can be found the corresponding directed hamiltonian cycle in $T$, thus $T$ is an yes-instance.
+	\end{itemize}
+\end{enumerate}
+\par Therefore, the given problem is NP-complete.
+}
+
+\pagebreak
+\section*{5. ($\bigstar\bigstar\bigstar$ 10') Subgraph Isomorphism}
+Two graphs $G = (V, E)$ and $G' = (V', E')$ are said to be isomorphic if there is a one-to-one mapping $f:V \rightarrow V'$ such that $(v,w)\in E$ if and only if $(f(v),f(w))\in E'$. Also, we say that $G'$ is a subgraph of $G$ if $V' \subseteq V$,and $E' =\{(u,v)\in E | u,v \in V'\}$. Given two graphs $G$ and $G'$,show that the problem of determining whether $G'$ is isomorphic to a subgraph of $G$ is NP-complete. (K-clique Problem: Given a graph with $n$ nodes, whether there exist $k$ nodes that are all connected to each other?)
+{
+\color{blue}
+\par\textbf{Solution: }
+\begin{enumerate}
+	\item Firstly, for any given certificate, we can traverse all nodes and edges in $G$ and $G'$ to try to make a successful mapping. Since there are poli-number nodes and edges, this can be done in polynomial time. Thus the given problem is in NP.
+	\item We choose K-clique problem which is a NP-complete problem. For any given instance of K-clique problem with graph $G_0$, we construct an instance of the given problem: let $G = G_0$ and let $G'$ be a graph with $k$ nodes, where $k$ is the number of nodes in the given instance.
+	\item We now prove an instance (denote as $T$) of K-clique problem is an yes-instance iff the corresponding instance (denote as $(G,G')$) of Subgraph Isomorphism is an yes-instance.
+	\begin{itemize}
+		\item "$\Rightarrow$": If $T$ is an yes-instance of K-clique problem, then there is a k-clique in $T$ and also there is a k-clique in $G$. Since k-clique is isomorphic to any other k-clique, thus the any graph with $k$ nodes is isomorphic to part of the k-clique, so $G'$ is isomorphic to a subgraph of $G$ thus $(G,G')$ is an yes-instance.
+		\item "$\Leftarrow$": If $(G,G')$ is an yes-instance, then $G'$ is isomorphic to a subgraph of $G$. Since $G'$ is any graph with $k$ nodes, $G'$ can be the k-clique which means there is a k-clique in $G$, meaning there is also a k-clique in $T$. Thus $T$ is an yes-instance.
+	\end{itemize} 
+\end{enumerate}
+\par Therefore, the given problem is NP-complete.
+}
+\end{document}

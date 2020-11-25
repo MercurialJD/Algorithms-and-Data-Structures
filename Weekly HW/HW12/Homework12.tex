@@ -1,0 +1,446 @@
+%! TEX = pdflatex
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{color}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{titling}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{listings}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{graphicx}
+\renewcommand{\baselinestretch}{1.2}%Adjust Line Spacing
+\newtheorem{Q}{Question}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}% Adjust Margins of the File
+\usepackage{tikz-qtree}
+\usetikzlibrary{graphs}
+\tikzset{every tree node/.style={minimum width=2em,draw,circle},
+	blank/.style={draw=none},
+	edge from parent/.style=
+	{draw,edge from parent path={(\tikzparentnode) -- (\tikzchildnode)}},
+	level distance=1.2cm}
+\setlength{\droptitle}{-6em}
+%%% Code style
+\lstset{
+	%backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+	rulesepcolor= \color{gray}, %代码块边框颜色
+	breaklines=true,  %代码过长则换行
+	numbers=left, %行号在左侧显示
+	numberstyle= \small,%行号字体
+	keywordstyle= \color{magenta},%关键字颜色
+	commentstyle=\color{blue}, %注释颜色
+	frame=shadowbox, %用方框框住代码块
+	tabsize=3, %缩进大小
+	showspaces = false
+}
+% Create horizontal rule command with an argument of height
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}}
+% Set the title here
+\title{
+    \normalfont \normalsize
+    \textsc{ShanghaiTech University} \\ [25pt]
+    \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+    \huge CS101 Algorithms and Data Structures\\ % The assignment title
+    \LARGE Fall 2019\\
+    \LARGE Homework 12\\
+    \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+% wrong usage of \author, never mind
+\author{}
+\date{Due date: 23:59, December 15th, 2019}
+
+% set the header and footer
+\pagestyle{fancy}
+\lhead{CS101 Algorithms and Data Structures}
+\chead{Homework 12}
+\rhead{Due date: 23:59, December 15th, 2019}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% special settings for the first page
+\fancypagestyle{firstpage}
+{
+	\renewcommand{\headrulewidth}{0pt}
+	\fancyhf{}
+	\fancyfoot[C]{\thepage}
+}
+
+% Add the support for auto numbering
+% use \problem{title} or \problem[number]{title} to add a new problem
+% also \subproblem is supported, just use it like \subsection
+\newcounter{ProblemCounter}
+\newcounter{oldvalue}
+\newcommand{\problem}[2][-1]{
+	\setcounter{oldvalue}{\value{secnumdepth}}
+	\setcounter{secnumdepth}{0}
+	\ifnum#1>0
+		\setcounter{ProblemCounter}{#1}
+	\else
+		\stepcounter{ProblemCounter}
+	\fi
+	\section{Problem \arabic{ProblemCounter}: #2}
+	\setcounter{secnumdepth}{\value{oldvalue}}
+}
+\newcommand{\subproblem}[1]{
+	\setcounter{oldvalue}{\value{section}}
+	\setcounter{section}{\value{ProblemCounter}}
+	\subsection{#1}
+	\setcounter{section}{\value{oldvalue}}
+}
+
+\begin{document}
+\maketitle
+\thispagestyle{firstpage}
+%\newpage
+\vspace{3ex}
+
+\begin{enumerate}
+\item Please write your solutions in English. 
+
+\item Submit your solutions to gradescope.com.  
+
+\item Set your FULL Name to your Chinese name and your STUDENT ID correctly in Account Settings. 
+
+\item If you want to submit a handwritten version, scan it clearly. Camscanner is recommended. 
+
+\item When submitting, match your solutions to the according problem numbers correctly. 
+
+\item No late submission will be accepted.
+
+\item Violations to any of above may result in zero score. 
+
+\item {\large\color{red}{In this homework, all the algorithm design part need the four part proof. The demand is in the next page. If you do not use the four part proof, you will not get any point.}}
+
+\item {\large\color{red}{In the algorithm design problem, you should design the correct algorithm whose running time is equal or smaller than the correct answer. If it's larger than the correct answer, you cannot get any point.}}
+
+\end{enumerate}
+\newpage
+\section*{Demand of the Algorithm Design}
+All of your algorithm should need the four-part solution, this will help us to score your algorithm. You should include {\large\textbf{main idea, pseudocode, proof of correctness and run time analysis.}} The detail is as below:
+\begin{enumerate}
+
+\item The {\textbf{main idea}} of your algorithm. This should be short and concise, at most one paragraph—
+just a few sentences. It does not need to give all the details of your solution or why it is
+correct. This is the single most important part of your solution. If you do
+a good job here, the readers are more likely to be forgiving of small errors elsewhere.
+
+\item The {\textbf{pseudocode}} for your algorithm. The purpose of pseudocode is to communicate concisely and clearly, so think about how to write your pseudocode to convey the idea to the
+reader.
+Note that pseudocode is meant to be written at a high level of abstraction. Executable code is
+not acceptable, as it is usually too detailed. Providing us with working C code or Java code
+is not acceptable. The sole purpose of pseudocode is to make it easy for the reader to follow
+along. Therefore, pseudocode should be presented at a higher level than source code (source
+code must be fit for computer consumption; pseudocode need not). Pseudocode can use
+standard data structures. For instance, pseudocode might refer to a set S, and in pseudocode
+you can write things like “add element $x$ to set $S$.” That would be unacceptable in source
+code; in source code, you would need to specify things like the structure of the linked list
+or hashtable used to store $S$, whereas pseudocode abstracts away from those implementation
+details. As another example, pseudocode might include a step like “for each edge $(u, v) \in E$”,
+without specifying the details of how to perform the iteration. 
+
+\item A {\textbf{proof of correctness}}.  You must prove that your algorithm work correctly, no matter
+what input is chosen.
+For iterative or recursive algorithms, often a useful approach is to find an invariant. A loop
+invariant needs to satisfy three properties: (1) it must be true before the first iteration of the
+loop; (2) if it is true before the $i$th iteration of the loop, it must be true before the $i$ + 1st
+iteration of the loop; (3) if it is true after the last iteration of the loop, it must follow that the output of your algorithm is correct. You need to prove each of these three properties holds.
+Most importantly, you must specify your invariant precisely and clearly.
+If you invoke an algorithm that was proven correct in class, you don’t need to re-prove its correctness.
+
+\item The asymptotic \textbf{running time} of your algorithm, stated using O(·) notation. And you should have your \textbf{running time analysis}, i.e., the justification for why your algorithm’s running time is
+as you claimed. Often this can be stated in a few sentences (e.g.: “the loop performs $|E|$
+iterations; in each iteration, we do $O(1)$ Find and Union operations; each Find and Union
+operation takes $O(\log|V|)$ time; so the total running time is $O(|E|\log|V|)$”). Alternatively, this
+might involve showing a recurrence that characterizes the algorithm’s running time and then
+solving the recurrence.
+\end{enumerate}
+\newpage
+\section*{0. Four Part Proof Example}
+Given a sorted array A of n (possibly negative) distinct integers, you want to find out whether
+there is an index $i$ for which $A[i] = i$. Devise a divide-and-conquer algorithm that runs in
+$O(\log n)$ time.\\
+{\color{blue}{
+\textbf{Main idea}:\\
+		To find the $i$, we use binary search, first we get the middle element of the list, if the middle of the element is $k$, then get the $i$. Or we seperate the list from middle and get the front list and the back list. If the middle element is smaller than $k$, we repeat the same method in the back list. And if the middle element is bigger than $k$, we repeat the same method in the front list. Until we cannot get the front or the back list we can say we cannot find it.\\
+	\textbf{Pseudocode}:
+		\begin{algorithm}
+			\caption{Binary Search(A)}
+			\label{alg2}
+			\color{blue}
+			\begin{algorithmic}
+				\STATE $low\gets 0$
+				\STATE $high\gets n-1$
+			  	\WHILE{$low < high$}
+			  		\STATE $mid \gets (low+high)/2$
+				\IF{$(k == A[mid])$}
+					\RETURN mid
+				\ELSIF{$k > A[mid]$}
+					\STATE $low\gets mid+1$
+				\ELSE
+					\STATE $high\gets mid-1$
+				\ENDIF
+				\ENDWHILE
+				\RETURN -1
+			\end{algorithmic}
+		\end{algorithm}\\
+	\textbf{Proof of Correctness}:\\
+		Since the list is sorted, and if the middle is $k$, then we find it. If the middle is less than $k$, then all the element in the front list is less than $k$, so we just look for the $k$ in the back list. Also, if the middle is greater than $k$, then all the element in the back list is greater than $k$, so we just look for the $k$ in the front list. And when there is no back list and front list, we can said the $k$ is not in the list, since every time we abandon the items that must not be $k$. And otherwise, we can find it.\\
+	\textbf{Running time analysis}:\\
+		The running time is $\Theta(\log n)$.\\
+		Since every iteration we give up half of the list. So the number of iteration is $\log_2 n= \Theta(\log n)$.}}
+\newpage
+\section*{1. ($\bigstar\bigstar$ 10') Greedy Cards}
+
+TA Wang and Yuan are playing a game, where there are $n$ cards in a line. The cards are all face-up and numbered 2-9. Wang and Yuan take turns. Whoever's turn it is can take one card from either the right end and or the left end of the line. The goal for each player is to maximize the sum of the cards they've collected.
+
+\begin{enumerate}
+\item[(a)] Wang decides to use a greedy strategy: ``on my turn, I will take the larger of the two cards available to me." Show a small counterexample ($n\leq 5$) where Wang will lose if he plays this greedy strategy, assuming Wang goes first and Yuan plays optimally, but he could have won if he had played optimally.
+
+\item[(b)] Yuan decides to use dynamic programming to find an algorithm to find an algorithm to maximize his score, assuming he is playing against Wang and Wang is using the greedy strategy from part (a). Help Yuan develop the dynamic programming solution by providing an algorithm with its runtime and space complexity.
+\end{enumerate}
+{\color{blue}
+\par\textbf{Solution: }
+\begin{enumerate}
+	\item[(a)] Assume the cards are $[2,3,9,4]$. 
+		\par If Wang decides to use greedy strategy, then Wang goes first and take $4$, then Yuan takes $9$, Wang takes the $3$ and Yuan takes $2$. Wang gets $7$ in total while Yuan gets $11$ in total, so Wang loses. 
+		\par If Wang plays in optimal, then Wang takes $2$ in the first round and then Yuan takes either $3$ or $4$, which ensures that Wang would take $9$ in his next turn. Wang would get $11$ in total while Yuan would get $7$ in total, so Wang wins in the optimal strategy.
+	
+	\item[(b)] \par\textbf{Main idea: }
+	\par Assume the cards are represented as an array $A$. To maximize score, Yuan should always take the card that is optimal in the remaining cards. In Yuan's turn, he can either take the left card or the right card of the remaining array. Since Wang always takes the larger card, we can figure out the largest sum for Yuan's next turn by comparing the results of choosing the left card and the right card in this turn, and we can use an array to store all larger sums for further usage.
+		
+		\pagebreak
+		\par\textbf{Pseudocode: }
+		\begin{algorithm}
+			\caption{greedyCards(A,i,j)}
+			\label{alg2}
+			\color{blue}
+			\begin{algorithmic}
+				\WHILE{$i \leq x < j\ and\ i \leq y < j$}
+					\STATE $M[x, y] \gets 0$
+				\ENDWHILE
+				\WHILE{$i \leq a < b < j$}
+					\IF{$A[b] \geq A[a+1]$}
+						\STATE $L \gets A[a] + M[a+1, b-1]$
+					\ELSE
+						\STATE $L \gets A[a] + M[a+2, b]$
+					\ENDIF
+					\IF{$A[a] > A[b-1]$}
+						\STATE $R \gets A[b] + M[a+1, b-1]$
+					\ELSE
+						\STATE $R \gets A[b] + M[a, b-2]$
+					\ENDIF
+					\STATE $M[a,b] \gets max(L, R)$
+				\ENDWHILE
+				\RETURN $M[i,j]$
+			\end{algorithmic}
+		\end{algorithm}
+		
+		\par\textbf{Proof of correctness: }		\par In Yuan's turn, he has two choices, either take the left card or the right card, and he should always make the choice that will maximum his total score. Suppose that in one turn, the remaining cards Yuan faces are represented as $A[i,j]$. If Yuan choose the left card, then the remaining cards become $A[i+1,j]$ and then is Wang's turn. Since Wang always take the larger card (and suppose he always take the right card if two cards are equal) , there will be two possible situations: 
+		\begin{enumerate}
+			\item[1.] If $A[j]$ is larger than or equal to $A[i+1]$, then Wang would take $A[j]$, meaning Yuan can only choose cards from $A[i+1,j-1]$ in his turn and Yuan again finds the optimal in $A[i+1,j-1]$.
+			\item[2.] If $A[j]$ is smaller than $A[i+1]$, then Wang would take $A[i+1]$, meaning Yuan can only choose cards from $A[i+2,j]$ in his turn and Yuan again finds the optimal in $A[i+2,j]$.
+		\end{enumerate}
+		\par This is actually a recursive relation but we can use an array to temporarily store intermediate results.
+		\par The relation is similar if Yuan take the right card and Yuan always choose the larger result between choosing left card or choosing right card.\\
+
+		\par\textbf{Complexity analysis: }
+		\par The initialization needs $O(n^2)$ time and there are $O(n^2)$ iterations where each iteration needs $O(1)$, therefore the running time is $O(n^2)$. Since the algorithm needs an $n\times n$ array, the space complexity is $O(n^2)$.
+\end{enumerate}
+}
+
+\pagebreak
+\section*{2. ($\bigstar\bigstar\bigstar$ 10') Three Partition}
+Given a list of positive numbers, $a_1,\dots,a_n$, can we partition $\{1,\dots,n\}$ into 3 disjoint subsets, $I,J,K$ such that:
+\[ \sum_{i\in I}a_i = \sum_{j\in J}a_j = \sum_{k\in K} a_k = \frac{\sum\limits_{i=1}^{n}a_i}{3} \]
+
+Devise and analyse a dynamic programming solution to the above problem that runs in time polynomial in $\sum\limits_{i=1}^n a_i$ and $n$.
+{\color{blue}
+\par\textbf{Solution: }
+\par\textbf{Main idea: }
+\par Since the problem asks if there exists three subsets that have equal sums, we can simplify this problem into two subproblems: does there exist two subsets of $\{a_1,\ldots,a_n\}$ for a given subset of $\{1,\ldots,n\}$ that have sums equal to given values? Define the subproblem as $P(i,j,k)$ where $i$ and $j$ are the given value and $k$ is the largest index of the subset. And we have the following relation: 
+\[P(i,j,k) = P(i-a_k,j,k-1)\ ||\ P(i,j-a_k,k-1)\ ||\ P(i,j,k-1)\]
+\par The final result can be obtained from $P(\frac{1}{3}\sum\limits_{i=1}^{n}{a_i}, \frac{1}{3}\sum\limits_{i=1}^{n}{a_i}, n)$.\\
+
+\par\textbf{Pseudocode: }
+\par Suppose all integers are stored in array $A$ and the following algorithm solves the problem be transforming the original problem to $P(\frac{1}{3}\sum\limits_{i=1}^{n}{a_i}, \frac{1}{3}\sum\limits_{i=1}^{n}{a_i}, n)$.
+\begin{algorithm}
+	\caption{threePartition(A,k)}
+	\label{alg2}
+	\color{blue}
+	\begin{algorithmic}
+		\STATE $total \gets \sum\limits_{i=1}^{k}{A[i]}$
+		\STATE $i \gets \frac{1}{3}total$, $j \gets \frac{1}{3}total$
+		\WHILE{$0 \leq a \leq i$}
+			\WHILE{$0 \leq b \leq j$}
+				\IF{$a == b == 0$}
+					\STATE $M[a,b,0] \gets TRUE$
+				\ELSE
+					\STATE $M[a,b,0] \gets FALSE$
+				\ENDIF
+			\ENDWHILE
+		\ENDWHILE
+		\WHILE{$1 \leq c \leq k$}
+			\WHILE{$0 \leq a \leq i$}
+				\WHILE{$0 \leq b \leq j$}
+					\STATE $M[a,b,c] \gets (M[a-A[k],b,c-1)\ ||\ M[a,b-A[k],c-1]\ ||\ M[a,b,c-1])$
+				\ENDWHILE
+			\ENDWHILE
+		\ENDWHILE
+		\RETURN $M[i,j,k]$
+	\end{algorithmic}
+\end{algorithm}
+
+\par\textbf{Proof of correctness: }
+\par For the base case, where $a == b == 0$, the sum of the set is $0$ and we can have the correct answer from above algorithm. For non-base cases, suppose we want to find $P(i,j,k)$ and suppose all answers before this subproblem is correctly resolved. Since $a_k$ can only be place into one of the three subsets, then $P(i,j,k)$ is TRUE if at least one of the following conditions is held:
+	\begin{enumerate}
+		\item $P(i-a_k,j,k-1)$ is TURE, meaning $a_k$ should be placed into the first subset;
+		\item $P(i,j-a_k,k-1)$ is TURE, meaning $a_k$ should be placed into the second subset;
+		\item $P(i,j,k-1)$ is TURE, meaning $a_k$ should be placed into the third subset;
+	\end{enumerate}
+\par If none of the conditions is held, then $P(i,j,k)$ must be FALSE since there is no where no place $a_k$.\\
+
+\par\textbf{Running time analysis: }
+\par The calculation of the sum of $\{1,\ldots,n\}$ can be finished in $O(n)$. Since $a,b \in[0, \frac{1}{3}\sum\limits_{i=1}^{n}{a_i}] $, $c \in [1,n]$ and each operation in iterations is $O(n)$, therefore the running time is $O((\sum\limits_{i=1}^{n}{a_i})^2\cdot n)$.
+}
+\pagebreak
+
+\section*{3. ($\bigstar\bigstar\bigstar$ 10')Steel Beams}
+Given a list of integers $C=(c_1,...,c_k)$ with $0<c_1<c_2<...<c_k$ and a target $T>0$, the algorithm should output nonnegative integers $(a_1,...,a_k)$ such that $\sum\limits_{i=1}^k a_ic_i=T$ where $\sum\limits_{i=1}^k a_i$ is as small as possible, or return 'not possible' if no such integers exist.
+\begin{itemize}
+\item[(a)]State your recurrence relation.
+\item[(b)]Prove correctness of your algorithm by induction.
+\item[(c)] Find the running time of your algorithm.
+\end{itemize}
+{\color{blue}
+\par\textbf{Solution: }
+\par\textbf{Main idea: }
+\par Define $Opt(n)$ which gives the minimum $\sum\limits_{i=1}^k a_i$ such that $\sum\limits_{i=1}^k a_ic_i=n$. Then the subproblem is to find the minimum solution in which one integer $c_i \in C$ occurs one less time. The recurrence relation is: 
+\[Opt(n) = min(Opt(n-c_i)) + 1\, i \in [1,k]\]
+\par Use an array $A[n,k]$ (initialize to zeros) to store the occurrence of $\{c_1,\ldots, c_n\}$.\\
+	
+	\par\textbf{Pseudocode: }
+	\begin{algorithm}
+			\caption{steelBeams(C,n,k)}
+			\label{alg2}
+			\color{blue}
+			\begin{algorithmic}
+				\STATE $M[0] \gets 0$
+				\WHILE{$1 \leq i \leq n$}
+					\STATE	$M[i] \gets -1$
+				\ENDWHILE
+				\WHILE{$0 \leq a \leq n$}
+					\STATE $last\_add \gets -1$
+					\WHILE{$1 \leq b \leq k$}
+						\IF{$C[b] \leq a$}
+							\IF{$M[a-C[b]] < M[a]$}
+								\STATE $M[a] \gets M[a-C[b]]$
+								\STATE $A[a,b]\ += 1$
+								\IF{$last\_add\ != -1$}
+									\STATE $A[a,last\_add]\ -=\ 1$
+								\ENDIF
+								\STATE $last\_add \gets b$
+							\ENDIF
+						\ENDIF
+					\ENDWHILE
+					\STATE $M[a]\ += 1$
+				\ENDWHILE
+				\RETURN $(M[n]\ != -1)\ ?\ P[n]\ :\ No\_Solution$
+			\end{algorithmic}
+		\end{algorithm}
+
+\par\textbf{Proof of correctness: }
+\par For the base case, it is clear that no integer should occur, thus the result only consists zeros. 
+\par For other cases, suppose $Opt(n-c_i)$ is opotimal and we get $(a_1,\ldots,a_{j},\ldots,a_k)$ for $Opt(n-c_i)$, then there exists $(a_1, \ldots, a_{j} + 1, \ldots, a_k)$ such that $\sum\limits_{i=1}^k a_ic_i=n$ while $\sum\limits_{i=1}^k a_i$ might not be minimum, so we always find the index $j$ that minimize $\sum\limits_{i=1}^k a_i$ for $Opt(n)$ and we are done. If there's no $Opt(n-c_i)$ for all $i$s, then there would be no solution for $Opt(n)$ since we can't find a integer that is suitable.\\
+
+\par\textbf{Running time analysis: }
+\par Since for each $a \in [0,T]$ the algorithm needs to go through all $c_i \in C$ and every operation in iteration needs $O(1)$, therefore, the total running time is $O(kT)$.
+}
+\pagebreak
+
+\section*{4. ($\bigstar\bigstar\bigstar\bigstar$ 10') Propositional Parentheses}
+You are given a propositional logic formula using only $\land$, $\lor$, $\mathsf{T}$ and $\mathsf{F}$ that does not have parentheses. You want to find out how many different ways there are to correctly parenthesize the formula so that the resulting formula evaluates to true. For example, the formula $\mathsf{T}\lor\mathsf{F}\lor\mathsf{T}\land\mathsf{F}$ can be correctly parenthesized in 5 ways:
+\begin{align*}
+(\mathsf{T}\lor(\mathsf{F}\lor(\mathsf{T}\land\mathsf{F}))) \\
+(\mathsf{T}\lor((\mathsf{F}\lor\mathsf{T})\land\mathsf{F})) \\
+((\mathsf{T}\lor\mathsf{F})\lor(\mathsf{T}\land\mathsf{F})) \\
+((\mathsf{T}\lor\mathsf{F})\lor\mathsf{T})\land\mathsf{F}) \\
+((\mathsf{T}\lor(\mathsf{F}\lor\mathsf{T}))\land\mathsf{F})
+\end{align*}
+of which 3 evaluate to true: $((\mathsf{T}\lor\mathsf{F})\lor(\mathsf{T}\land\mathsf{F}))$, $(\mathsf{T}\lor((\mathsf{F}\lor\mathsf{T})\land\mathsf{F}))$ and $(\mathsf{T}\lor(\mathsf{F}\lor(\mathsf{T}\land\mathsf{F})))$.
+
+Give a dynamic programming algorithm to solve this problem. Describe your algorithm, including a clear statement of your recurrence, show that it is correct, and prove its running time.
+{\color{blue}
+\par\textbf{Solution: }
+\par\textbf{Main idea: }
+\par Since parenthesizing the formula means changing the priority of calculation, we can bipartite the formula according to priorities around specific origins that are logic operators in the formula. Each time we bipartite the formula and continue bipartite the subformulas until the last subformulas are consisted of only T an F. Then calculate each subformula's value and calculate the binary relation between them according to the particular origin and pass the calculated relation to the upper subformula until the original formula is calculated. Denote the binary values in the formula as $v_1, \ldots, v_n$ and denote the binary operators as $o_1, \ldots, o_{n-1}$, define $T(i,j)$ as the number of ways to parenthesize the subformula ($v_io_i\ldots o_{j-1}v_j$) that results in true, define $F(i,j)$ as the number of ways to parenthesize the subformula ($v_io_i\ldots o_{j-1}v_j$) that results in false. We can obtain the recurrence relation as: 
+	$$
+	T(i,j) = \left\{
+		\begin{aligned}
+			&1, \qquad \qquad \qquad \qquad \quad\ \qquad\qquad\qquad \qquad if\ i == j\ and\ v_i == T\\
+			&0, \qquad\qquad \qquad \qquad \qquad \qquad \qquad \quad\ \qquad if\ i == j\ and\ v_i == F\\
+			&\sum\limits_{i\leq m \leq j}^{o_m = \lor}{(T(i,m)\cdot T(m+1,j)+T(i,m)\cdot F(m+1,j)+F(i,m)\cdot T(m+1,j))}+\\ &\qquad\qquad\sum\limits_{i\leq m \leq j}^{o_m = \land}{T(i,m)\cdot T(m+1, j)}, \qquad if\ i < j
+		\end{aligned}
+	\right.	
+	$$
+	$$
+	F(i,j) = \left\{
+		\begin{aligned}
+			&0, \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \quad\  if\ i == j\ and\ v_i == T\\
+			&1, \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \quad\ if\ i == j\ and\ v_i == F\\
+			&\sum\limits_{i\leq m \leq j}^{o_m = \land}{(F(i,m)\cdot F(m+1,j)+T(i,m)\cdot F(m+1,j)+F(i,m)\cdot T(m+1,j))}+\\ &\qquad\qquad\sum\limits_{i\leq m \leq j}^{o_m = \lor}{F(i,m)\cdot F(m+1, j)}, \qquad if\ i < j
+		\end{aligned}
+	\right.	
+	$$
+	\par The final result for this problem can be obtained from $T(1,n)$.
+\pagebreak
+
+\par\textbf{Pseudocode: }
+\par Suppose the binary values are stored in array $V[n]$ and the binary operators are stored in array $O[n-1]$. Suppose the indexes of arrays starts from 1.
+\begin{algorithm}
+	\caption{parentheses(V,O,i,j)}
+	\label{alg2}
+	\color{blue}
+	\begin{algorithmic}
+		\WHILE{$i \leq a \leq j$}
+			\WHILE{$i \leq b \leq j$}
+				\IF{$a == b$}
+					\IF{$V[a] == TURE$}
+						\STATE $T[a,b] \gets 1$, $F[a,b] \gets 0$
+					\ELSE
+						\STATE $T[a,b] \gets 0$, $F[a,b] \gets 1$
+					\ENDIF
+				\ELSE
+					\STATE $T[a,b] \gets 0$, $F[a,b] \gets 0$
+				\ENDIF
+				\STATE $T\_count \gets 0$, $F\_count \gets 0$
+				\WHILE{$i \leq m \leq j$}
+					\IF{$O[m] == \lor$}
+						\STATE $T\_count\ += (T[a,m]\cdot T[m+1,b]+T[a,m]\cdot F[m+1,b]+F[a,m]\cdot T[m+1,b])$
+						\STATE $F\_count\ += F[a,m]\cdot F[m+1,b]$
+					\ELSE
+						\STATE $T\_count\ += T[a,m]\cdot T[m+1,b]$
+						\STATE $F\_count\ += (T[a,m]\cdot T[m+1,b]+T[a,m]\cdot F[m+1,b]+F[a,m]\cdot T[m+1,b]) $
+					\ENDIF
+				\ENDWHILE
+				\STATE $T[a,b] \gets T\_count$, $F[a,b] \gets F\_count$
+			\ENDWHILE
+		\ENDWHILE
+		\RETURN $T[1,n]$
+	\end{algorithmic}
+\end{algorithm}
+
+\par\textbf{Proof of correctness: }
+\par For the base case, where the formula consists of only one operator and two values, the result is correct. For other cases, suppose the subformulas of one fomula has been correctly calculated, if the operator in this formula is $\lor$, then the formula is TRUE iff at least one of its subformulas is TRUE, the formula is FALSE iff both of its subformulas are FALSE; if the operator in this formula is $\land$, then the formula is False iff at least one of its subformulas is FALSE, the formula is TRUE iff both of its subformulas are TRUE. \\
+
+\par\textbf{Running time analysis: }
+\par Since $a,b \in [1,n]$ thus there are $O(n^2)$ ways to parentheses the formula for a given origin, and there are $n$ origins can be chosen. Therefore, the total time is $O(n^3)$.
+}
+\end{document}
