@@ -29,8 +29,6 @@ This repo contains homework done (All AC) during the course Algorithms and Data 
     2. Help Student from SIST
     3. Kill the Dragon
 
-
-
 ### Weekly Homework
 
 Please look into the PDFs within the folders.
