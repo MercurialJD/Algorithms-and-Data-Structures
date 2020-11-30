@@ -6,9 +6,9 @@ This repo contains homework done (All AC) during the course Algorithms and Data 
 
 
 
-## Brief Descriptions
+## Summaries
 
-*Detailed descriptions of each homework are provided within the corresponding folder.*
+*Brief summaries for each homework are listed below, but you may want to refer to detailed descriptions provided within the corresponding folder.*
 
 ### Programming Homework
 
